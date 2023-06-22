@@ -48,6 +48,15 @@ app.post("/start", (req, res) => {
     })
 });
 
+function urlMapToDSCache(url) {
+    // url="https://huggingface.co/datasets/clue/blob/main/dataset_infos.json"
+    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/(\w+)\/raw\/main\/dataset_infos.json/);
+    console.log(matches)
+    if (!fs.existsSync('dicache/'+matches[1])) {
+        fs.mkdirSync('dicache/'+matches[1], {recursive: true})
+    }
+    return 'dicache/'+matches[1] +'/dataset_infos.json'
+}
 
 app.post("/query_subdb", (req, res) => {
     
@@ -55,8 +64,23 @@ app.post("/query_subdb", (req, res) => {
     // https://huggingface.co/datasets/clue/raw/main/dataset_infos.json
     url = `https://huggingface.co/datasets/${req.body.dataset_name}/raw/main/dataset_infos.json`
     console.log(url);
+    local_dijson = urlMapToDSCache(url)
+    if (fs.existsSync(local_dijson)) {
+        fs.readFile(local_dijson, {encoding: 'utf8'}, (err, data) => {
+            if (err) throw err;
+            console.log(data);
+            const result = JSON.parse(data);
+            res.json(
+                {'data': Object.keys(result)}
+            )
+        });
+        return
+    }
     request(url, function(err, response, body) {
+        console.log(response);
         console.log(body);
+        fs.writeFileSync(local_dijson, body)
+        console.log(`file ${local_dijson} wrote.`)
         const result = JSON.parse(body);
         res.json(
             {'data': Object.keys(result)}
@@ -101,6 +125,7 @@ app.post("/peek_parquet", (req, res) => {
     }
     if (fs.existsSync(local_parquet)) {
         query_parquet(local_parquet);
+        return
     }
     console.log(req.body.url)
     request.get({url:req.body.url, encoding: null}, function(err, response, body) {
