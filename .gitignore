@@ -5,3 +5,6 @@ package-lock.json
 clue/
 recycle/
 dicache/
+
+__pycache__/
+

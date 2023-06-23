@@ -125,10 +125,6 @@ https://huggingface.co/datasets/{dataset_name}/resolve/refs%2Fconvert%2Fparquet/
 
 
 ## 查询数据库
-函数名：start
-输入：void
-返回：创建duckdb全局duckdb数据库连接对象
-
 函数名称：query_subdb
 输入：数据库名
 返回：可作为工作数据库的列表
@@ -148,8 +144,42 @@ FROM 'local_parquet'
 LIMIT(10)
 ```
 
+函数名：start
+输入：void
+返回：ping测试
+
 函数名：stop
 输入：void
-返回：关闭duckdb全局duckdb数据库连接对象
+返回：ping测试
 
+## 示例
 
+在parquet数据上利用duckdb执行SQL，如果我们想访问tnews/clue-test数据库，那么构造如下请求：
+
+`POST http://transformers.science:33000/peek_parquet`
+
+```json
+{
+  "url":"https://huggingface.co/datasets/clue/resolve/refs%2Fconvert%2Fparquet/tnews/clue-test.parquet",
+  "sql":"SELECT count(*) FROM 'local_parquet' LIMIT(10)"
+}
+```
+
+即可在parquet数据格式上，使用duckdb语法执行SQL语句，上述语句的结果为：
+
+```json
+{
+    "data": [
+        {
+            "count_star()": 10000
+        }
+    ]
+}
+```
+
+## 总结
+本项目实现了在HF数据集上，利用DuckDB对数据集执行SQL语句的方法，从HF页面上获取parquet的URL后，执行peek_parquet函数进行SQL语句。
+
+## 致谢
+
+项目作者： Brian Shen. Twitter @dezhou.
