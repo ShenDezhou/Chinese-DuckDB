@@ -1,7 +1,7 @@
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
-// var duckdb = require('duckdb');
+const duckdb_url = "http://127.0.0.1:8000/sql";
 var request = require('request')
 // request = request.defaults({'proxy':'http://127.0.0.1:1087'});
 
@@ -112,9 +112,24 @@ app.post("/peek_parquet", (req, res) => {
         }
         console.log(sql);
 
-        res.json({
-                    data:"TO BE FIXED"
+        var data = {
+            "sql": req.body.sql,
+            "table": local_parquet,
+            "return_fmt": "polar"
+        }
+        request.post({url: duckdb_url,
+            body:data,
+            headers: { "content-type": "application/json"},
+            json: true}, 
+            function(err, response, body) {
+                if (err) {
+                    throw err;
+                }
+                console.log(response)
+                res.json({
+                    data:body['data']
                 })
+        })
         // bot.all(sql, function(err, response) {
         //     if (err) {
         //         throw err;
