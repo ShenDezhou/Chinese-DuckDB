@@ -1,4 +1,5 @@
-const fs = require("fs");
+const fs = require('fs');
+var {globSync} = require("glob");
 const express = require("express");
 const bodyParser = require("body-parser");
 const duckdb_url = "http://127.0.0.1:8000/sql";
@@ -22,6 +23,24 @@ function handleError(err) {
 function onDisconnect(message) {
     console.log(message);
     bot = null;
+}
+
+
+function observe() {
+    const all = fs.readdirSync(".", {withFileTypes: true})
+    const folders = all.filter(i=>i.isDirectory())
+                .filter(i=>!i.name.startsWith(".") && !i.name.startsWith("_"))
+                .filter(i=>!i.name.startsWith('node_modules') && !i.name.startsWith('recycle')).map(i=> i.name)
+    observation = {}
+    for (var dir of folders){
+        const results =  globSync(`${dir}/*/**`)
+        observation[dir] = results
+        if (results.length == 0) {
+            const results =  globSync(`${dir}/*`)
+            observation[dir] = results
+        }
+    }
+    return observation
 }
 
 function urlMapToPath(url) {
@@ -180,7 +199,8 @@ app.post("/step", async (req, res) => {
                 }
                 console.log(response)
                 res.json({
-                    data:body['data']
+                    data:body['data'],
+                    status: observe()
                 })
         })
     }
