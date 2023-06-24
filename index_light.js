@@ -161,10 +161,41 @@ app.post("/peek_parquet", (req, res) => {
 });
 
 app.post("/step", async (req, res) => {
-    // import useful package
-    // let response_sent = false;
-    console.log(req.body)
-
+    console.log(req.body);
+    local_parquet = urlMapToPath(req.body.url)
+    console.log(local_parquet);
+    function query_parquet(local_parquet) {
+        var data = {
+            "sql": req.body.sql,
+            "table": local_parquet,
+            "return_fmt": "polar"
+        }
+        request.post({url: duckdb_url,
+            body:data,
+            headers: { "content-type": "application/json"},
+            json: true}, 
+            function(err, response, body) {
+                if (err) {
+                    throw err;
+                }
+                console.log(response)
+                res.json({
+                    data:body['data']
+                })
+        })
+    }
+    if (fs.existsSync(local_parquet)) {
+        query_parquet(local_parquet);
+        return
+    }
+    console.log(req.body.url)
+    request.get({url:req.body.url, encoding: null}, function(err, response, body) {
+        console.log(response);
+        console.log(body);
+        fs.writeFileSync(local_parquet, body)
+        console.log(`file ${local_parquet} wrote.`)
+        query_parquet(local_parquet);
+    })
 });
 
 app.post("/stop", (req, res) => {
