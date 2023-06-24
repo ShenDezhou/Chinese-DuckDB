@@ -130,7 +130,7 @@ https://huggingface.co/datasets/{dataset_name}/resolve/refs%2Fconvert%2Fparquet/
 返回：可作为工作数据库的列表
 
 函数名称：query_subdb_split
-输入：数据库名、工作数据库名、样本类型(train\test\validation)
+输入：数据库名、工作数据库名、样本类型(train\test\validation)、当前块号、总块号
 返回：数据库的parquet地址（URL格式）
 
 函数名称：peek_parquet

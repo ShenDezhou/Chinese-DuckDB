@@ -89,7 +89,13 @@ app.post("/query_subdb", (req, res) => {
 
 app.post("/query_subdb_split", (req, res) => {
     console.log(req.body);
-    url = `https://huggingface.co/datasets/${req.body.dataset_name}/resolve/refs%2Fconvert%2Fparquet/${req.body.working_dataset_name}/${req.body.dataset_name}-${req.body.split}.parquet`
+    if (req.body.total_part !== undefined && req.body.current_part !== undefined ) {
+        const current_part = req.body.current_part.toString().padStart(5, "0")
+        const total_part = req.body.total_part.toString().padStart(5, "0")
+        url = `https://huggingface.co/datasets/${req.body.dataset_name}/resolve/refs%2Fconvert%2Fparquet/${req.body.working_dataset_name}/${req.body.dataset_name}-${req.body.split}-${current_part}-of-${total_part}.parquet`
+    } else {
+        url = `https://huggingface.co/datasets/${req.body.dataset_name}/resolve/refs%2Fconvert%2Fparquet/${req.body.working_dataset_name}/${req.body.dataset_name}-${req.body.split}.parquet`    
+    }
     console.log(url);
     res.json(
         {'data': url}
