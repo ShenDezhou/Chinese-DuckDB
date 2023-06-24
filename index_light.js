@@ -123,20 +123,15 @@ app.post("/query_subdb_split", (req, res) => {
 
 app.post("/peek_parquet", (req, res) => {
     console.log(req.body);
+    if (!req.body.url) {
+        res.json({
+            status: observe()
+        })
+        return
+    }
     local_parquet = urlMapToPath(req.body.url)
     console.log(local_parquet);
     function query_parquet(local_parquet) {
-        // if (req.body.sql) {
-        //     console.log(req.body.sql)
-        //     sql = req.body.sql.replace('local_parquet', `${local_parquet}`)
-        // } else {
-        //     sql = `SELECT count(*)
-        //            FROM '${local_parquet}' 
-        //            LIMIT(10)
-        //            `
-        // }
-        // console.log(sql);
-
         var data = {
             "sql": req.body.sql,
             "table": local_parquet,
@@ -156,15 +151,7 @@ app.post("/peek_parquet", (req, res) => {
                     status: observe()
                 })
         })
-        // bot.all(sql, function(err, response) {
-        //     if (err) {
-        //         throw err;
-        //     }
-        //     console.log(response)
-        //     res.json({
-        //         data:response
-        //     })
-        // });
+        
     }
     if (fs.existsSync(local_parquet)) {
         query_parquet(local_parquet);
@@ -182,6 +169,12 @@ app.post("/peek_parquet", (req, res) => {
 
 app.post("/step", async (req, res) => {
     console.log(req.body);
+    if (!req.body.url) {
+        res.json({
+            status: observe()
+        })
+        return
+    }
     local_parquet = urlMapToPath(req.body.url)
     console.log(local_parquet);
     function query_parquet(local_parquet) {
