@@ -55,7 +55,6 @@ function urlMapToPath(url) {
 
 app.post("/start", (req, res) => {
     if (bot) onDisconnect("Restarting bot");
-    bot = null;
     console.log(req.body);
     // var db = new duckdb.Database(':memory:'); 
     // bot = db.connect();
@@ -63,6 +62,7 @@ app.post("/start", (req, res) => {
     // bot.run("LOAD httpfs;")
     res.json({
         message: "Bot started",
+        status: observe()
     })
 });
 
@@ -126,16 +126,16 @@ app.post("/peek_parquet", (req, res) => {
     local_parquet = urlMapToPath(req.body.url)
     console.log(local_parquet);
     function query_parquet(local_parquet) {
-        if (req.body.sql) {
-            console.log(req.body.sql)
-            sql = req.body.sql.replace('local_parquet', `${local_parquet}`)
-        } else {
-            sql = `SELECT count(*)
-                   FROM '${local_parquet}' 
-                   LIMIT(10)
-                   `
-        }
-        console.log(sql);
+        // if (req.body.sql) {
+        //     console.log(req.body.sql)
+        //     sql = req.body.sql.replace('local_parquet', `${local_parquet}`)
+        // } else {
+        //     sql = `SELECT count(*)
+        //            FROM '${local_parquet}' 
+        //            LIMIT(10)
+        //            `
+        // }
+        // console.log(sql);
 
         var data = {
             "sql": req.body.sql,
@@ -152,7 +152,8 @@ app.post("/peek_parquet", (req, res) => {
                 }
                 console.log(response)
                 res.json({
-                    data:body['data']
+                    data:body['data'],
+                    status: observe()
                 })
         })
         // bot.all(sql, function(err, response) {
