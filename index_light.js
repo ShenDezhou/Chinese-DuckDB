@@ -68,7 +68,7 @@ app.post("/start", (req, res) => {
 
 function urlMapToDSCache(url) {
     // url="https://huggingface.co/datasets/clue/blob/main/dataset_infos.json"
-    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([-\w]+)\/raw\/main\/dataset_infos.json/);
+    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([\.-\w]+)\/raw\/main\/dataset_infos.json/);
     console.log(matches)
     if (!fs.existsSync('dicache/'+matches[1])) {
         fs.mkdirSync('dicache/'+matches[1], {recursive: true})
