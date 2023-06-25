@@ -30,7 +30,7 @@ function observe() {
     const all = fs.readdirSync(".", {withFileTypes: true})
     const folders = all.filter(i=>i.isDirectory())
                 .filter(i=>!i.name.startsWith(".") && !i.name.startsWith("_"))
-                .filter(i=>!i.name.startsWith('node_modules') && !i.name.startsWith('recycle')).map(i=> i.name)
+                .filter(i=>!i.name.startsWith('dicache') && !i.name.startsWith('node_modules') && !i.name.startsWith('recycle')).map(i=> i.name)
     observation = {}
     for (var dir of folders){
         const results =  globSync(`${dir}/*/**`)
