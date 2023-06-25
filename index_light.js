@@ -45,7 +45,7 @@ function observe() {
 
 function urlMapToPath(url) {
     // url="https://huggingface.co/datasets/clue/resolve/refs%2Fconvert%2Fparquet/tnews/clue-train.parquet"
-    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([-\w]+)\/resolve\/refs%2Fconvert%2Fparquet\/([-_\w]+)\/([\w-]+\.parquet)/);
+    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([-\w]+)\/resolve\/refs%2Fconvert%2Fparquet\/([\.-_\w]+)\/([\w-]+\.parquet)/);
     console.log(matches)
     if (!fs.existsSync(matches[1]+'/'+matches[2])) {
         fs.mkdirSync(matches[1]+'/'+matches[2], {recursive: true})
@@ -68,7 +68,7 @@ app.post("/start", (req, res) => {
 
 function urlMapToDSCache(url) {
     // url="https://huggingface.co/datasets/clue/blob/main/dataset_infos.json"
-    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([\.-\w]+)\/raw\/main\/dataset_infos.json/);
+    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([-\w]+)\/raw\/main\/dataset_infos.json/);
     console.log(matches)
     if (!fs.existsSync('dicache/'+matches[1])) {
         fs.mkdirSync('dicache/'+matches[1], {recursive: true})
