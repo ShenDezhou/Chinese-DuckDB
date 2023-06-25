@@ -45,7 +45,7 @@ function observe() {
 
 function urlMapToPath(url) {
     // url="https://huggingface.co/datasets/clue/resolve/refs%2Fconvert%2Fparquet/tnews/clue-train.parquet"
-    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/(-\w]+)\/resolve\/refs%2Fconvert%2Fparquet\/([\.-\w]+)\/([\w-]+\.parquet)/);
+    const matches = url.match(/https:\/\/huggingface\.co\/datasets\/([-\w]+)\/resolve\/refs%2Fconvert%2Fparquet\/([\.-\w]+)\/([\w-]+\.parquet)/);
     console.log(matches)
     if (!fs.existsSync(matches[1]+'/'+matches[2])) {
         fs.mkdirSync(matches[1]+'/'+matches[2], {recursive: true})
